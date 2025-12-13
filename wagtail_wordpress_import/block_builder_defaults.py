@@ -301,11 +301,17 @@ def get_image_alt(img_tag):
 
 
 def get_image_file_name(src):
-    return src.split("/")[-1] if src else None  # need the last part
+    if not src:
+        return None
+
+    return src.replace("/", "_").strip("_")
 
 
 def get_document_file_name(src):
-    return src.split("/")[-1] if src else None  # need the last part
+    if not src:
+        return None
+
+    return src.replace("/", "_").strip("_")
 
 
 def image_exists(name):
