@@ -51,7 +51,10 @@ class BlockBuilder:
             promotees = self.soup.find_all(promotee)
             for promotee in promotees:
                 if promotee.parent.name in removee_tags:
-                    promotee.parent.replace_with(promotee)
+                    try:
+                        promotee.parent.replace_with(promotee)
+                    except ValueError:
+                        pass
 
     def get_builder_function(self, element):
         """
@@ -114,7 +117,9 @@ class BlockBuilder:
                     )  # before building a block write fall back cache to a block
                 self.blocks.append(builder_function(element))
             else:
-                if element.text.strip():  # exclude a tag that is empty
+                if element.text.strip() or len(
+                    list(element.children)
+                ):  # exclude a tag that is empty
                     cached_fallback_value += str(element)
 
             if cached_fallback_value and counter == len(
