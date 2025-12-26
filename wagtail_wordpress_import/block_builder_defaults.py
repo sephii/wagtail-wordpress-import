@@ -1,3 +1,6 @@
+import hashlib
+import pathlib
+
 import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
@@ -304,14 +307,26 @@ def get_image_file_name(src):
     if not src:
         return None
 
-    return src.replace("/", "_").strip("_")
+    name = src.replace("/", "_").strip("_")
+
+    if len(name) > 100:
+        ext = pathlib.Path(name).suffix
+        name = hashlib.sha1(name.encode()).hexdigest() + ext
+
+    return name
 
 
 def get_document_file_name(src):
     if not src:
         return None
 
-    return src.replace("/", "_").strip("_")
+    name = src.replace("/", "_").strip("_")
+
+    if len(name) > 100:
+        ext = pathlib.Path(name).suffix
+        name = hashlib.sha1(name.encode()).hexdigest() + ext
+
+    return name
 
 
 def image_exists(name):
